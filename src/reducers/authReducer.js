@@ -1,0 +1,36 @@
+import { LOGIN_USER, LOGOUT_USER, TOGGLE_AUTHENTICATING  } from '../actions/types'
+
+
+const initialState = {
+  authenticating: true,
+  currentUser: {}
+}
+
+const authReducer = (state = initialState, action) => {
+  switch (action.type){
+
+    case LOGIN_USER:
+    return {
+      ...state,
+      currentUser: action.payload.user
+    }
+
+    case LOGOUT_USER:
+    return {
+      ...state,
+      currentUser: {}
+    }
+
+    case TOGGLE_AUTHENTICATING:
+    return {
+      ...state,
+      authenticating: !state.authenticating
+    }
+
+    default:
+    return state
+
+  }
+}
+
+export default authReducer
