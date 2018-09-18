@@ -11,7 +11,6 @@ class App extends Component {
 
   componentDidMount () {
     if (localStorage.getItem('token')){
-
     } else {
       this.props.toggleAuthenticatingUser()
     }
