@@ -1,15 +1,35 @@
-import { fetchLogin } from '../adapters/authAdapter'
+import { fetchLogin, fetchReauthUser } from '../adapters/authAdapter'
 import { LOGIN_USER, TOGGLE_AUTHENTICATING } from './types'
 import { decksNormalizer } from '../normalizers/decksNormalizer'
 
 
 export const loginUser  = (user) => {
   return (dispatch) => {
-    fetchLogin(user).then(data => {
-      dispatch(setCurrentUser({username: data.user.username, id: data.user.id}))
-      const normalizedData = decksNormalizer(data.user.decks)
-      dispatch(setDecksandCards(normalizedData.entities))
-      localStorage.setItem('token', data.jwt)
+    fetchLogin(user)
+    .then(data => {
+      if (data) {
+        let normalizedData = decksNormalizer(data.user.decks)
+        dispatch(setCurrentUser({username: data.user.username, id: data.user.id}))
+        dispatch(setDecksandCards(normalizedData.entities))
+        localStorage.setItem('token', data.jwt)
+      } else {
+        dispatch(toggleAuthenticatingUser)
+      }
+    })
+  }
+}
+
+export const reauthUser = () => {
+  return (dispatch) => {
+    fetchReauthUser()
+    .then(user => {
+      if (user) {
+        let normalizedData = decksNormalizer(user.decks)
+        dispatch(setCurrentUser({username: user.username, id: user.id}))
+        dispatch(setDecksandCards(normalizedData.entities))
+      } else {
+        dispatch(toggleAuthenticatingUser())
+      }
     })
   }
 }
@@ -34,10 +54,13 @@ const setDecksandCards = (data) => {
   const cards = data.cards || []
   const stars = data.stars || []
   const forks = data.forks || []
-  debugger;
   return {
     type: 'DECK_LOAD',
-    decks: data.decks,
-    cards: data.cards
+    payload: {
+      decks,
+      cards,
+      stars,
+      forks
+    }
   }
 }

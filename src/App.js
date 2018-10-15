@@ -4,13 +4,14 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import { connect } from 'react-redux'
-import { toggleAuthenticatingUser } from './actions'
+import * as actions from './actions'
 import './App.css';
 
 class App extends Component {
 
   componentDidMount () {
     if (localStorage.getItem('token')){
+      this.props.reauthUser()
     } else {
       this.props.toggleAuthenticatingUser()
     }
@@ -30,4 +31,4 @@ class App extends Component {
   }
 }
 
-export default withRouter(connect(null, { toggleAuthenticatingUser })(App))
+export default withRouter(connect(null, actions )(App))

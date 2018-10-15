@@ -5,8 +5,8 @@ export default function cardReducer(state = {byId:{},allId:[]} , action){
     case LOAD_DECK:
     return {
       ...state,
-      byId: action.cards,
-      allId: Object.keys(action.cards)
+      byId: action.payload.cards,
+      allId: Object.keys(action.payload.cards)
     }
 
     case 'CREATE_DECK_AND_CARDS':
